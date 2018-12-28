@@ -1,0 +1,192 @@
+<!-- Main content contianer begin -->
+<div class="container">
+  <div class="row margin-top-10">
+    <div class="col-xl-8 col-lg-10 col-md-12 offset-xl-2 offset-lg-1 mt-4">
+      <form #taskForm="ngForm" novalidate>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Project: </label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" required [(ngModel)]="taskDetails.project" name="project" #projectName="ngModel" [disabled]="true">
+              <div *ngIf="projectName.invalid && (projectName.dirty || projectName.touched)">
+                <div *ngIf="projectName.errors?.required" class="alert alert-danger">Project is required field</div>
+              </div>
+            </div>
+            <div class="col-sm-2 mt-3 mt-sm-0 mt-lg-0 mt-md-0 mt-xs-0">
+              <button type="button" name="searchProject" class="btn btn-primary" (click)="open(projectSearch)" [disabled]="srchprojbtndisabled">Search</button>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Task: </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="taskDetails.task" name="task" #taskName="ngModel">
+              <div *ngIf="taskName.invalid && (taskName.dirty || taskName.touched)">
+                <div *ngIf="taskName.errors?.required" class="alert alert-danger">Task is required field</div>
+              </div>
+            </div>
+        </div>
+        <div class="form-check row">
+            <div class="col-sm-9 offset-sm-0 offset-md-3 offset-lg-3 mb-3">
+              <input type="checkbox" class="form-check-input" ng-change="resetparentValues()" [(ngModel)]="taskDetails.parentTask" name="parentTask" id="parentTask" [disabled]="prntTaskbtndisabled"> 
+              <label class="form-check-label" for="parentTask">Parent Task</label>
+            </div>
+        </div>
+        <div *ngIf="!taskDetails.parentTask">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Priorty: </label>
+            <div class="col-sm-9">
+              <input type="hidden" [(ngModel)]="priorty" onchange="method()" name="priorty">
+              <ng5-slider [(value)]="priorty" [options]="priortyOptions"></ng5-slider>
+            </div>
+          </div>
+          <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Parent Task: </label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control" [(ngModel)]="taskDetails.parent" name="parent" #parentName="ngModel" [disabled]="true">
+              </div>
+              <div class="col-sm-2 mt-3 mt-sm-0 mt-lg-0 mt-md-0 mt-xs-0">
+                <button type="button" name="searchParentTask" class="btn btn-primary" (click)="open(searchParentModel)" [disabled]="prntTasksrchbtndiabled">Search</button>
+              </div>
+          </div>
+          
+          <div class="form-group row">
+            <label for="start_date" class="col-sm-3 col-form-label">Start Date</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="startDate" (focus)="start_date.open()" ngbDatepicker 
+                  #start_date="ngbDatepicker" #myStartDate="ngModel" id="start_date" [(ngModel)]="starting_date" required >    
+                  <div *ngIf="myStartDate.errors && (myStartDate.dirty || myStartDate.touched || submitted)" class="alert alert-danger">
+                      <div >
+                          Please select start date
+                      </div>
+                  </div>
+            </div>
+          </div>
+          <div class="form-group row">
+              <label for="end_date" class="col-sm-3 col-form-label">End Date</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" name="endDate" (focus)="end_date.open()" ngbDatepicker 
+                    #end_date="ngbDatepicker" id="end_date" #myEndDate="ngModel" [(ngModel)]="ending_date" required >
+                    <div *ngIf="myEndDate.errors && (myEndDate.dirty || myEndDate.touched || submitted)" class="alert alert-danger">
+                        <div >
+                            Please select end date
+                        </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">User: </label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" required [(ngModel)]="taskDetails.user" name="user" #userName="ngModel" [disabled]="true">
+              <div *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+                <div *ngIf="userName.errors?.required" class="alert alert-danger">User is required field</div>
+              </div>
+            </div>
+            <div class="col-sm-2 mt-3 mt-sm-0 mt-lg-0 mt-md-0 mt-xs-0">
+              <button type="button" name="searchUser" class="btn btn-primary" (click)="open(userSearch)" [disabled]="usersrchbtndisabled">Search</button>
+            </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-9 offset-sm-0 offset-md-3 offset-lg-3">
+            <input type="button" class="btn btn-primary" id="add-task" name="addProject" value="{{buttonValue}}" [disabled]="taskForm.invalid || projectEnableBtn || userEnableBtn" (click)="addTask(taskForm.value, taskForm)" /> &nbsp;&nbsp;
+            <input type="reset" class="btn btn-secondary" name="resetProject" value="Reset" (click)="taskForm.resetForm({}); resetForm()" />
+          </div>
+        </div>
+
+        <div class="form-group row" *ngIf="errorMessage">
+          <div class="col-sm-12">
+            <div class="alert alert-danger">{{errorMessage}}</div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #projectSearch let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Please select Project</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Project: </label>
+      <div class="col-sm-9">
+        <ng-template #rt let-r="result.projectName" let-t="term">
+          <ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+        </ng-template>
+        <input id="project" type="text" class="form-control" 
+          [(ngModel)]="selectedProject" [ngbTypeahead]="searchProject" [resultTemplate]="rt" [inputFormatter]="formatterProject" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-9 offset-sm-0 offset-lg-3">
+        <input type="button" value="Select" (click)="selectProject(); c('Save click')" class="btn btn-primary" [disabled]="!selectedProject" />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Cross click')">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #searchParentModel let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Please select Parent Task</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Parent Task: </label>
+      <div class="col-sm-9">
+        <ng-template #rt let-r="result.task" let-t="term">
+          <ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+        </ng-template>
+        <input id="project" type="text" class="form-control" 
+          [(ngModel)]="parentTaskNameModel" [ngbTypeahead]="searchParent" [resultTemplate]="rt" [inputFormatter]="formatterParent" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-9 offset-sm-0 offset-lg-3">
+        <input type="button" value="Select" (click)="selectParentTask(); c('Save click')" class="btn btn-primary" [disabled]="!parentTaskNameModel" />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Cross click')">Cancel</button>
+  </div>
+</ng-template>
+<!-- Parent task selection modal end -->
+
+<!-- user selection modal begin -->
+<ng-template #userSearch let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Please select User</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">User: </label>
+      <div class="col-sm-9">
+        <ng-template #rt let-r="result.name" let-t="term">
+          <ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+        </ng-template>
+        <input id="project" type="text" class="form-control" 
+          [(ngModel)]="selectedUser" [ngbTypeahead]="searchUser" [resultTemplate]="rt" [inputFormatter]="formatterUser" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-9 offset-sm-0 offset-lg-3">
+        <input type="button" value="Select" (click)="selectUser(); c('Save click')" class="btn btn-primary" [disabled]="!selectedUser" />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Cross click')">Cancel</button>
+  </div>
+</ng-template>
