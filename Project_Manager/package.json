@@ -1,0 +1,30 @@
+{
+  "name": "taskmanager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ramakrishnan83/TaskManager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ramakrishnan83/TaskManager/issues"
+  },
+  "homepage": "https://github.com/Ramakrishnan83/TaskManager#readme",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-generator": "^4.16.0",
+    "jasmine": "^3.3.1",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.3.13",
+    "request": "^2.88.0"
+  }
+}
