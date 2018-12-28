@@ -1,9 +1,9 @@
 {
-  "name": "task-manager-client",
+  "name": "project-manager-client",
   "version": "0.0.0",
   "scripts": {
     "postinstall": "ng build",
-    "start": "ng serve",
+	"start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
