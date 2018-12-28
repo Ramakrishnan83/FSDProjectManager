@@ -60,7 +60,7 @@ export class UserComponent implements OnInit {
         if (data) {
           this.userData = data.data;
           //console.log(this.userData);
-          if (data.length > 0) {
+          if (this.userData.length > 0) {
             this.userAvailable = true;
           } else {
             this.userAvailable = false;
